@@ -427,14 +427,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   music: {fileID: 1223523023}
   beat: {fileID: 1483365274}
-  starttimer: -5
+  starttimer: -1
   playing: 0
   bpm: 75
   nextBeat: 0
   beatCount: 0
   currentStep: 0
   grounds: 0
-  rhythm: 
+  latency: 0.2
+  missRange: 0.3
+  perfectRange: 0.15
+  rhythm: []
 --- !u!4 &1223523028
 Transform:
   m_ObjectHideFlags: 0

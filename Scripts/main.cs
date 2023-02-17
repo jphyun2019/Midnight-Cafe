@@ -4,9 +4,6 @@ using UnityEngine;
 
 
 
-
-
-
 public enum step
 {
     Grinding,
@@ -16,7 +13,6 @@ public enum step
     Steaming,
     Combining
 }
-
 public class main : MonoBehaviour
 {
 
@@ -26,14 +22,15 @@ public class main : MonoBehaviour
     public bool playing = false;
     public int bpm;
 
-    public int nextBeat = 0;
+    public double nextBeat = 0;
     public double beatCount;
     public step currentStep;
     public int grounds;
+    public double latency;
+    public double missRange;
+    public double perfectRange;
 
-
-    public int[] rhythm;
-
+    public List<double> rhythm = new List<double>();
 
     void Start()
     {
@@ -62,37 +59,64 @@ public class main : MonoBehaviour
             if (beatCount > nextBeat)
             {
                 beat.Play(0);
-                nextBeat += (60 / (bpm));
+                nextBeat += 1;
             }
 
             if(currentStep == step.Grinding)
             {
                 if (Input.GetButtonDown("j")|Input.GetButtonDown("k"))
                 {
-                    if(beatCount%1 < 0.2)
+                    //Debug.Log((beatCount-0.175) % 1);
+                    if ((rhythm.Count == 0) && ((beatCount % 1 < (missRange + latency)) || (beatCount % 1 > ((1-missRange) + latency))))
                     {
-                        Debug.Log("good: " + beatCount % 1);
+                        rhythm = new List<double> { Mathf.Round((float)beatCount) + 1, Mathf.Round((float)beatCount) + 2, Mathf.Round((float)beatCount) + 3 };
+                        Debug.Log("start");
                     }
-                    else
+                    else if (rhythm.Count != 0)
                     {
-                        Debug.Log("bad: " + beatCount % 1);
+                        if (((beatCount - latency) - rhythm[0]) > missRange)
+                        {
+                            Debug.Log("miss");
+                            rhythm.RemoveAt(0);
+                        }
+                        else
+                        {
+                            if (Mathf.Abs((float)((beatCount - latency) - rhythm[0])) < missRange)
+                            {
+                                if(Mathf.Abs((float)((beatCount - latency) - rhythm[0])) < perfectRange)
+                                {
+
+                                    Debug.Log("perfect: " + (Mathf.Abs((float)((beatCount - latency) - rhythm[0]))));
+                                    rhythm.RemoveAt(0);
+                                }
+                                else
+                                {
+                                    Debug.Log("good: " + (Mathf.Abs((float)((beatCount - latency) - rhythm[0]))));
+                                    rhythm.RemoveAt(0);
+                                }
+
+                            }
+                            else
+                            {
+                                Debug.Log("bad");
+                            }
+                        }
+
                     }
+
+                }
+                else
+                {
+                    if((rhythm.Count  > 0)&&(((beatCount - latency) - rhythm[0]) > missRange)){
+                        Debug.Log("miss");
+                        rhythm.RemoveAt(0);
+                    }
+
                 }
             }
 
 
-
-
-
-
-
-
-
-
         }
-        
-
-
 
     }
 }
