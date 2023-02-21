@@ -31,6 +31,7 @@ public class main : MonoBehaviour
     public double perfectRange;
 
     public List<double> rhythm = new List<double>();
+    public List<(double, double)> holds = new List<(double, double)>();
 
     void Start()
     {
@@ -58,61 +59,96 @@ public class main : MonoBehaviour
 
             if (beatCount > nextBeat)
             {
-                beat.Play(0);
+                //beat.Play(0);
                 nextBeat += 1;
             }
 
-            if(currentStep == step.Grinding)
+
+
+
+
+
+
+            if (Input.GetButtonDown("j") | Input.GetButtonDown("k"))
             {
-                if (Input.GetButtonDown("j")|Input.GetButtonDown("k"))
+                //Debug.Log((beatCount-0.175) % 1);
+                if ((rhythm.Count == 0) && ((beatCount % 1 < (missRange + latency)) || (beatCount % 1 > ((1 - missRange) + latency))))
                 {
-                    //Debug.Log((beatCount-0.175) % 1);
-                    if ((rhythm.Count == 0) && ((beatCount % 1 < (missRange + latency)) || (beatCount % 1 > ((1-missRange) + latency))))
+
+                    if ((rhythm.Count == 0) && ((beatCount % 1 < (perfectRange + latency)) || (beatCount % 1 > ((1 - perfectRange) + latency))))
                     {
-                        rhythm = new List<double> { Mathf.Round((float)beatCount) + 1, Mathf.Round((float)beatCount) + 2, Mathf.Round((float)beatCount) + 3 };
-                        Debug.Log("start");
+                        Debug.Log("perfect start");
+                        beat.Play(0);
                     }
-                    else if (rhythm.Count != 0)
+                    else
                     {
-                        if (((beatCount - latency) - rhythm[0]) > missRange)
-                        {
-                            Debug.Log("miss");
-                            rhythm.RemoveAt(0);
-                        }
-                        else
-                        {
-                            if (Mathf.Abs((float)((beatCount - latency) - rhythm[0])) < missRange)
-                            {
-                                if(Mathf.Abs((float)((beatCount - latency) - rhythm[0])) < perfectRange)
-                                {
 
-                                    Debug.Log("perfect: " + (Mathf.Abs((float)((beatCount - latency) - rhythm[0]))));
-                                    rhythm.RemoveAt(0);
-                                }
-                                else
-                                {
-                                    Debug.Log("good: " + (Mathf.Abs((float)((beatCount - latency) - rhythm[0]))));
-                                    rhythm.RemoveAt(0);
-                                }
-
-                            }
-                            else
-                            {
-                                Debug.Log("bad");
-                            }
-                        }
-
+                        Debug.Log("good start");
+                        beat.Play(0);
                     }
+                    double[] tempRhythm = { };
+                    (double, double)[] tempHold = { };
+                    if (currentStep == step.Grinding)
+                    {
+                        tempRhythm = new double[] { 1,2,3};
+                    }
+                    if (currentStep == step.Pressing)
+                    {
+                        tempRhythm = new double[] { 2, 3};
+                        tempHold = new (double, double)[] {(0, 1) };
+                    }
+
+                    foreach (double d in tempRhythm)
+                    {
+                        rhythm.Add(Mathf.Round((float)beatCount) + d);
+                    }
+
+
 
                 }
-                else
+                else if (rhythm.Count != 0)
                 {
-                    if((rhythm.Count  > 0)&&(((beatCount - latency) - rhythm[0]) > missRange)){
+                    if (((beatCount - latency) - rhythm[0]) > missRange)
+                    {
                         Debug.Log("miss");
                         rhythm.RemoveAt(0);
                     }
+                    else
+                    {
+                        if (Mathf.Abs((float)((beatCount - latency) - rhythm[0])) < missRange)
+                        {
+                            if (Mathf.Abs((float)((beatCount - latency) - rhythm[0])) < perfectRange)
+                            {
+
+                                Debug.Log("perfect: " + (Mathf.Abs((float)((beatCount - latency) - rhythm[0]))));
+                                rhythm.RemoveAt(0);
+                                beat.Play(0);
+                            }
+                            else
+                            {
+                                Debug.Log("good: " + (Mathf.Abs((float)((beatCount - latency) - rhythm[0]))));
+                                rhythm.RemoveAt(0);
+                                beat.Play(0);
+                            }
+
+                        }
+                        else
+                        {
+                            Debug.Log("bad");
+                        }
+                    }
 
                 }
+
+            }
+            else
+            {
+                if ((rhythm.Count > 0) && (((beatCount - latency) - rhythm[0]) > missRange))
+                {
+                    Debug.Log("miss");
+                    rhythm.RemoveAt(0);
+                }
+
             }
 
 

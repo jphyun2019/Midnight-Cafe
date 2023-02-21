@@ -434,9 +434,9 @@ MonoBehaviour:
   beatCount: 0
   currentStep: 0
   grounds: 0
-  latency: 0.2
-  missRange: 0.3
-  perfectRange: 0.15
+  latency: 0
+  missRange: 0.5
+  perfectRange: 0.2
   rhythm: []
 --- !u!4 &1223523028
 Transform:
@@ -479,7 +479,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: df9dbcb7d4cc0664da297ce5d38fd180, type: 3}
+  m_audioClip: {fileID: 8300000, guid: d8e67365c201c174bbd37ac2d2a0b64e, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
