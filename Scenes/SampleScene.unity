@@ -432,11 +432,15 @@ MonoBehaviour:
   bpm: 75
   nextBeat: 0
   beatCount: 0
+  audioTime: 0
+  gameTime: 0
+  difference: 0
+  maxDifference: 0
   currentStep: 0
   grounds: 0
   latency: 0
-  missRange: 0.5
-  perfectRange: 0.2
+  missRange: 0.4
+  perfectRange: 0.1
   rhythm: []
 --- !u!4 &1223523028
 Transform:
